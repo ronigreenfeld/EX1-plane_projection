@@ -72,17 +72,17 @@ All five real-world datasets and the synthetic edge-case suite were processed th
 
 ## 5. Qualitative Visual Quality & Anatomical Verification
 
-To confirm geometric and spatial accuracy, representative frames were extracted directly from the generated MP4 video containers:
+To confirm geometric accuracy, intensity fidelity, and aspect ratio preservation, representative frames were extracted directly from the generated MP4 video containers:
 
-| Dataset | Sample Frame | Observed Visual Features |
+| Dataset & Output Video | Extracted 2D Slice | Observed Anatomical / Structural Features |
 | :--- | :---: | :--- |
-| **Human Head MRI** ([MRHead_1.nrrd](file:///c:/Users/ronig/Desktop/EX1-plane_projection/data/real/volumes/MRHead_1.nrrd)) | Frame 65 | Crisp sagittal cross-section displaying cerebral cortex folds, corpus callosum, cerebellum, brainstem, spinal cord, and nasal cavities. |
-| **Croissant** ([croissant.nrrd](file:///c:/Users/ronig/Desktop/EX1-plane_projection/data/real/volumes/croissant.nrrd)) | Frame 50 | Clear triangular slice outline bounded on uniform canvas; distinct concentric dough laminations and internal butter layers visible. |
-| **Onion** ([onion.nrrd](file:///c:/Users/ronig/Desktop/EX1-plane_projection/data/real/volumes/onion.nrrd)) | Frame 60 | Oblique cutting trajectory highlighting the natural concentric tunic leaf scales and core stem. |
-| **Biscuit Cake** ([biscuit_cake.nrrd](file:///c:/Users/ronig/Desktop/EX1-plane_projection/data/real/volumes/biscuit_cake.nrrd)) | Frame 60 | Clean rectangular plane revealing horizontal layering of biscuit biscuits interspersed with cream fillings. |
-| **Swiss Roll** ([swiss_roll.nrrd](file:///c:/Users/ronig/Desktop/EX1-plane_projection/data/real/volumes/swiss_roll.nrrd)) | Frame 60 | Distinct spiral sponge roll layers topped with decorative cream rosettes and strawberries. |
+| **Human Head MRI**<br>• Volume: [`MRHead_1.nrrd`](../data/real/volumes/MRHead_1.nrrd)<br>• Video: [🎬 `output_head.mp4`](../experiments/outputs/output_head.mp4) | <img src="../experiments/previews/head_slice.png" alt="Head MRI Slice" width="220"/> | **Crisp Sagittal View:** Displays cerebral cortex folds, white/gray matter separation, corpus callosum, cerebellum, brainstem, spinal cord, and cranial contours. |
+| **Croissant ($500^3$ Benchmark)**<br>• Volume: [`croissant.nrrd`](../data/real/volumes/croissant.nrrd)<br>• Video: [🎬 `output_croissant.mp4`](../experiments/outputs/output_croissant.mp4) | <img src="../experiments/previews/croissant_slice.png" alt="Croissant Slice" width="220"/> | **Internal Dough Lamination:** Triangular slice profile accurately bounded on uniform canvas; distinct concentric butter folds and internal aeration pockets visible. |
+| **Onion**<br>• Volume: [`onion.nrrd`](../data/real/volumes/onion.nrrd)<br>• Video: [🎬 `output_onion.mp4`](../experiments/outputs/output_onion.mp4) | <img src="../experiments/previews/onion_slice.png" alt="Onion Slice" width="220"/> | **Concentric Tunic Scales:** Oblique 3D cut capturing the layered concentric bulb scales and internal core stem. |
+| **Biscuit Cake**<br>• Volume: [`biscuit_cake.nrrd`](../data/real/volumes/biscuit_cake.nrrd)<br>• Video: [🎬 `output_biscuit.mp4`](../experiments/outputs/output_biscuit.mp4) | <img src="../experiments/previews/biscuit_slice.png" alt="Biscuit Cake Slice" width="220"/> | **Multi-Layered Pastry:** Clean rectangular plane revealing horizontal layering of biscuit wafers interspersed with cream fillings. |
+| **Swiss Roll**<br>• Volume: [`swiss_roll.nrrd`](../data/real/volumes/swiss_roll.nrrd)<br>• Video: [🎬 `output_swiss_roll.mp4`](../experiments/outputs/output_swiss_roll.mp4) | <img src="../experiments/previews/swiss_roll_slice.png" alt="Swiss Roll Slice" width="220"/> | **Spiral Architecture:** Distinct rolled sponge cake spiral structure topped with cream rosettes and strawberries. |
 
-All extracted preview images are persisted under [experiments/previews/](file:///c:/Users/ronig/Desktop/EX1-plane_projection/experiments/previews/) and tracked in Git.
+All extracted preview images are persisted under [`experiments/previews/`](../experiments/previews/) and all playable MP4 videos are available under [`experiments/outputs/`](../experiments/outputs/).
 
 ---
 

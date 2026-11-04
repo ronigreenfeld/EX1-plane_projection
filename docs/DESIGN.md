@@ -189,6 +189,30 @@ For each discrete scanline $y \in [0, D_{height} - 1]$:
    Sample $x_1 \in [0, \lfloor d_{12}(y) \rfloor]$ maps to column index:
    $$x = x_{offset} + x_1$$
 
+#### Visual Scanline Geometry & Canvas Centering Diagram:
+
+```text
++-------------------------------------------------------------------------+  ---
+| 0 0 0 0 0 0 0 0 0 0 (Background Padding: v = 0) 0 0 0 0 0 0 0 0 0 0 0 0 |   ^
+|                                  Apex a                                 |   |
+|                                   /\                                    |   |
+|                                  /  \                                   |   |
+|            p_start(y) •=========|====|=========• p_end(y)               |   |
+|                       |<--d12-->|    |<--d12-->|                        | D_height
+|            |<x_offset>|                        |<x_offset>|             |   |
+|                      /                          \                       |   |
+|                     /       Active 2D Slice      \                      |   |
+|                    /                              \                     |   |
+|                 b •--------------------------------• c                  |   v
++-------------------------------------------------------------------------+  ---
+|<--------------------------------- D_width ----------------------------->|
+```
+
+This formulation guarantees that:
+1. Aspect ratios are preserved across varying scanline lengths without artificial stretching.
+2. The triangular / trapezoidal slice is symmetrically centered inside the rectangular bounding frame.
+3. All empty padding space evaluates to zero ($v = 0$), matching the background threshold.
+
 ---
 
 ## 4. Performance Optimization: Vectorization Strategy

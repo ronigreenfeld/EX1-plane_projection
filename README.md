@@ -32,6 +32,7 @@ Voxel queries outside the volume boundaries are systematically assigned zero val
 ├── docs/
 │   ├── SRS.md                     # Software Requirements Specification (IEEE 830 style)
 │   ├── DESIGN.md                  # Architectural decisions, OOP model & algorithm details
+│   ├── TESTING.md                 # Test plan, unit coverage & edge-case breakdown
 │   └── EXPERIMENTS.md             # Benchmark setup, FPS analysis & experimental results
 ├── src/                           # Core application source code
 │   ├── engine/                    # SIMD ProjectionEngine and slicing logic
@@ -44,7 +45,7 @@ Voxel queries outside the volume boundaries are systematically assigned zero val
 │   │   └── csv/                   # Cutting plane definition CSV files
 │   └── synthetic/                 # Synthetic analytical volumes (sphere_100.nrrd)
 ├── experiments/
-│   ├── outputs/                   # Generated MP4 video projections (kept locally)
+│   ├── outputs/                   # Generated MP4 video projections (Turnkey delivery)
 │   ├── previews/                  # Representative 2D slice previews (PNG)
 │   └── run_all_benchmarks.py      # Automated benchmark suite runner
 ├── tests/                         # Automated unit & integration test suite (31 tests)
@@ -104,12 +105,14 @@ Run the automated test suite across all modules:
 ```bash
 python -m unittest discover -s tests
 ```
-*Current test suite: **31 unit and integration tests (100% Passing)** in $\approx 0.6$ seconds.*
+*Current test suite: **31 unit and integration tests (100% Passing)** in $\approx 0.5$ seconds.*
 
 To execute the automated multi-dataset benchmark suite:
 ```bash
 python experiments/run_all_benchmarks.py
 ```
+
+*For detailed test breakdowns and edge-case analyses, refer to **[docs/TESTING.md](docs/TESTING.md)**.*
 
 ---
 
@@ -126,6 +129,20 @@ All benchmarks were measured on an Intel Core workstation (Windows 11, 64-bit, P
 | **Swiss Roll** | $256 \times 256 \times 130$ | `uint32` | 120 | $256 \times 256$ | **236.52 FPS** | **PASSED (Exceeded Target)** |
 | **Edge Cases Suite** | $256 \times 256 \times 130$ | `int16` | 16 | $280 \times 280$ | **114.70 FPS** | **PASSED (Exceeded Target)** |
 
+---
+
+## 🖼️ Visual Gallery & Output Videos
+
+Every dataset was sliced, centered, and rendered into an MP4 video container tracked in the repository:
+
+| Dataset | Extracted 2D Slice | Video Link & Description |
+| :--- | :---: | :--- |
+| **Human Head MRI** | <img src="experiments/previews/head_slice.png" alt="Head Slice" width="180"/> | [🎬 **Watch `output_head.mp4`**](experiments/outputs/output_head.mp4)<br>280 sagittal slices through the cerebral cortex, cerebellum, and brainstem. |
+| **Croissant ($500^3$)** | <img src="experiments/previews/croissant_slice.png" alt="Croissant Slice" width="180"/> | [🎬 **Watch `output_croissant.mp4`**](experiments/outputs/output_croissant.mp4)<br>100 triangular frames revealing laminated dough and butter layering. |
+| **Onion** | <img src="experiments/previews/onion_slice.png" alt="Onion Slice" width="180"/> | [🎬 **Watch `output_onion.mp4`**](experiments/outputs/output_onion.mp4)<br>120 oblique cross-sections highlighting concentric tunic bulb scales. |
+| **Biscuit Cake** | <img src="experiments/previews/biscuit_slice.png" alt="Biscuit Cake Slice" width="180"/> | [🎬 **Watch `output_biscuit.mp4`**](experiments/outputs/output_biscuit.mp4)<br>120 slices showing alternating biscuit layers and cream fillings. |
+| **Swiss Roll** | <img src="experiments/previews/swiss_roll_slice.png" alt="Swiss Roll Slice" width="180"/> | [🎬 **Watch `output_swiss_roll.mp4`**](experiments/outputs/output_swiss_roll.mp4)<br>120 frames through spiral sponge rolls with whipped cream topping. |
+
 *Detailed experimental analysis, hardware profiling, and resilience logs are documented in **[docs/EXPERIMENTS.md](docs/EXPERIMENTS.md)**.*
 
 ---
@@ -135,5 +152,7 @@ All benchmarks were measured on an Intel Core workstation (Windows 11, 64-bit, P
 Comprehensive engineering documentation is available under [`docs/`](docs/):
 * **[Software Requirements Specification (SRS)](docs/SRS.md)** – Detailed functional, non-functional, and interface requirements.
 * **[Architecture & Algorithm Design](docs/DESIGN.md)** – OOD class hierarchy, scanline projection math, and vectorization design.
+* **[Test Plan & Verification Report](docs/TESTING.md)** – Complete test matrix, unit test breakdown, and edge-case behavior.
 * **[Experiment Report](docs/EXPERIMENTS.md)** – Full evaluation methodology, hardware specifications, and benchmark output.
+
 
