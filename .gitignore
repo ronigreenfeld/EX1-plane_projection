@@ -25,17 +25,11 @@ venv/
 env/
 ENV/
 
-# Output artifacts & logs
+# Output logs & temp
 *.log
 project.log
-*.mp4
-output/
-experiments/outputs/
-
-# Binary data & datasets (kept locally)
-*.nrrd
-data/real/volumes/*.nrrd
-data/synthetic/*.nrrd
+scratch/
+.tempmediaStorage/
 
 # IDE
 .vscode/
