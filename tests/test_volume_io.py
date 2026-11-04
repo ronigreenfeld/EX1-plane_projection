@@ -4,10 +4,10 @@ import os
 import tempfile
 import unittest
 import numpy as np
-from src.geometry.plane import IsoscelesTrianglePlane, IsoscelesTrapezoidPlane
+from src.geometry.plane import IsoscelesTrianglePlane, IsoscelesTrapezoidPlane, InvalidPlane
 from src.io.nrrd_loader import NRRDVolume
 from src.io.csv_parser import CSVPlaneParser
-from src.utils.exceptions import VolumeIOError, CSVFormatError
+from src.utils.exceptions import VolumeIOError, CSVFormatError, CoplanarityError
 
 
 class TestNRRDVolume(unittest.TestCase):
@@ -30,6 +30,28 @@ class TestNRRDVolume(unittest.TestCase):
         array_4d = np.zeros((10, 10, 10, 3), dtype=np.uint8)
         with self.assertRaises(VolumeIOError):
             NRRDVolume(array_4d)
+
+    def test_volume_max_dimension_rejection(self):
+        """FR-1: Dimensions must satisfy 1 <= dim < 1024 (2^10). Violations must raise VolumeIOError."""
+        # dim >= 1024 on x-axis
+        oversized_x = np.zeros((1024, 10, 10), dtype=np.uint8)
+        with self.assertRaises(VolumeIOError):
+            NRRDVolume(oversized_x)
+
+        # dim >= 1024 on y-axis
+        oversized_y = np.zeros((10, 1024, 10), dtype=np.uint8)
+        with self.assertRaises(VolumeIOError):
+            NRRDVolume(oversized_y)
+
+        # dim >= 1024 on z-axis
+        oversized_z = np.zeros((10, 10, 1024), dtype=np.uint8)
+        with self.assertRaises(VolumeIOError):
+            NRRDVolume(oversized_z)
+
+        # dim < 1 (zero dimension)
+        zero_dim = np.zeros((0, 10, 10), dtype=np.uint8)
+        with self.assertRaises(VolumeIOError):
+            NRRDVolume(zero_dim)
 
     def test_vectorized_sampling_and_oob(self):
         volume = NRRDVolume(self.test_data)
@@ -101,6 +123,42 @@ class TestCSVPlaneParser(unittest.TestCase):
             if os.path.exists(tmp_path):
                 os.remove(tmp_path)
 
+    def test_parse_coplanarity_error(self):
+        """Negative test: Non-coplanar trapezoid line must be detected and handled."""
+        # 12 coordinates forming a trapezoid where points are non-coplanar:
+        # a1=(-1, 0, 1), a2=(1, 0, -1), b=(-3, 4, -1), c=(3, 4, 1)
+        # Legs are equal: dist(a1,b) = sqrt(24) == dist(a2,c) = sqrt(24), but z coordinates tilt out of plane
+        non_coplanar_line = "-1.0, 0.0, 1.0, 1.0, 0.0, -1.0, -3.0, 4.0, -1.0, 3.0, 4.0, 1.0"
+
+        # 1. Calling parse_line with validate_geometry=True must raise CoplanarityError
+        with self.assertRaises(CoplanarityError):
+            CSVPlaneParser.parse_line(non_coplanar_line, validate_geometry=True)
+
+        # 2. Calling parse_line without validation returns plane, but calling validate() raises CoplanarityError
+        plane = CSVPlaneParser.parse_line(non_coplanar_line)
+        self.assertFalse(plane.is_valid)
+        with self.assertRaises(CoplanarityError):
+            plane.validate()
+
+        # 3. File parsing: with tolerate_errors=True, recovers with an InvalidPlane (FR-24)
+        with tempfile.NamedTemporaryFile("w+", delete=False, suffix=".csv") as f:
+            f.write(non_coplanar_line + "\n")
+            tmp_path = f.name
+
+        try:
+            # When tolerate_errors=False and validate_geometry=True: raises CoplanarityError
+            with self.assertRaises(CoplanarityError):
+                CSVPlaneParser.parse_file(tmp_path, tolerate_errors=False, validate_geometry=True)
+
+            # When tolerate_errors=True: gracefully outputs InvalidPlane
+            planes = CSVPlaneParser.parse_file(tmp_path, tolerate_errors=True, validate_geometry=True)
+            self.assertEqual(len(planes), 1)
+            self.assertIsInstance(planes[0], InvalidPlane)
+        finally:
+            if os.path.exists(tmp_path):
+                os.remove(tmp_path)
+
 
 if __name__ == "__main__":
     unittest.main()
+

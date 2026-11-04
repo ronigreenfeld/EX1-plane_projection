@@ -34,6 +34,13 @@ To ensure strict reproducibility, all measurements were conducted on a standardi
 | **Core Libraries** | `numpy` v2.5.4, `opencv-python` v5.0.0, `pynrrd` v1.1.3 | SIMD-accelerated BLAS / LAPACK backend |
 | **Timer Precision** | `time.perf_counter()` | Sub-microsecond monotonic hardware clock |
 
+### 2.2 Dataset Provenance & Source Repositories
+The benchmark suite evaluates the engine across all datasets distributed by the course instruction team and the student community. The raw datasets originate from the following repositories:
+* **[Course Benchmark Datasets Drive (Part 1)](https://drive.google.com/drive/folders/1koJ83uaeMYdJt6AwvVlmMJk_wzczvmmG):** Human Head MRI (`MRHead_1.nrrd`), 500³ Croissant benchmark volume (`croissant.nrrd`), and the 16-frame Edge Cases Suite (`edge_cases.csv`).
+* **[Class Community Datasets Drive (Part 2)](https://drive.google.com/drive/folders/1lCbwgdLlXeefc9TKYExIDF-Qc_2lsk6G):** Onion cross-section (`onion.nrrd`), multi-layered Biscuit Cake (`biscuit_cake.nrrd`), and rolled sponge Swiss Roll (`swiss_roll.nrrd`).
+
+All volumes and plane CSV flight paths are mirrored locally within the repository under [`data/real/`](../data/real/) for independent, offline reproducibility.
+
 ---
 
 ## 3. Comprehensive Empirical Results
@@ -78,11 +85,11 @@ To confirm geometric accuracy, intensity fidelity, and aspect ratio preservation
 
 | Dataset & Output Video | Extracted 2D Slice | Observed Anatomical / Structural Features |
 | :--- | :---: | :--- |
-| **Human Head MRI**<br>• Volume: [`MRHead_1.nrrd`](../data/real/volumes/MRHead_1.nrrd)<br>• Video: [🎬 `output_head.mp4`](../experiments/outputs/output_head.mp4) | <img src="../experiments/previews/head_slice.png" alt="Head MRI Slice" width="220"/> | **Crisp Sagittal View:** Displays cerebral cortex folds, white/gray matter separation, corpus callosum, cerebellum, brainstem, spinal cord, and cranial contours. |
-| **Croissant (500³ Benchmark)**<br>• Volume: [`croissant.nrrd`](../data/real/volumes/croissant.nrrd)<br>• Video: [🎬 `output_croissant.mp4`](../experiments/outputs/output_croissant.mp4) | <img src="../experiments/previews/croissant_slice.png" alt="Croissant Slice" width="220"/> | **Internal Dough Lamination:** Triangular slice profile accurately bounded on uniform canvas; distinct concentric butter folds and internal aeration pockets visible. |
-| **Onion**<br>• Volume: [`onion.nrrd`](../data/real/volumes/onion.nrrd)<br>• Video: [🎬 `output_onion.mp4`](../experiments/outputs/output_onion.mp4) | <img src="../experiments/previews/onion_slice.png" alt="Onion Slice" width="220"/> | **Concentric Tunic Scales:** Oblique 3D cut capturing the layered concentric bulb scales and internal core stem. |
-| **Biscuit Cake**<br>• Volume: [`biscuit_cake.nrrd`](../data/real/volumes/biscuit_cake.nrrd)<br>• Video: [🎬 `output_biscuit.mp4`](../experiments/outputs/output_biscuit.mp4) | <img src="../experiments/previews/biscuit_slice.png" alt="Biscuit Cake Slice" width="220"/> | **Multi-Layered Pastry:** Clean rectangular plane revealing horizontal layering of biscuit wafers interspersed with cream fillings. |
-| **Swiss Roll**<br>• Volume: [`swiss_roll.nrrd`](../data/real/volumes/swiss_roll.nrrd)<br>• Video: [🎬 `output_swiss_roll.mp4`](../experiments/outputs/output_swiss_roll.mp4) | <img src="../experiments/previews/swiss_roll_slice.png" alt="Swiss Roll Slice" width="220"/> | **Spiral Architecture:** Distinct rolled sponge cake spiral structure topped with cream rosettes and strawberries. |
+| **Human Head MRI**<br>• Volume: [`MRHead_1.nrrd`](../data/real/volumes/MRHead_1.nrrd)<br>• Video: [`output_head.mp4`](../experiments/outputs/output_head.mp4) | <img src="../experiments/previews/head_slice.png" alt="Head MRI Slice" width="220"/> | **Crisp Sagittal View:** Displays cerebral cortex folds, white/gray matter separation, corpus callosum, cerebellum, brainstem, spinal cord, and cranial contours. |
+| **Croissant (500³ Benchmark)**<br>• Volume: [`croissant.nrrd`](../data/real/volumes/croissant.nrrd)<br>• Video: [`output_croissant.mp4`](../experiments/outputs/output_croissant.mp4) | <img src="../experiments/previews/croissant_slice.png" alt="Croissant Slice" width="220"/> | **Internal Dough Lamination:** Triangular slice profile accurately bounded on uniform canvas; distinct concentric butter folds and internal aeration pockets visible. |
+| **Onion**<br>• Volume: [`onion.nrrd`](../data/real/volumes/onion.nrrd)<br>• Video: [`output_onion.mp4`](../experiments/outputs/output_onion.mp4) | <img src="../experiments/previews/onion_slice.png" alt="Onion Slice" width="220"/> | **Concentric Tunic Scales:** Oblique 3D cut capturing the layered concentric bulb scales and internal core stem. |
+| **Biscuit Cake**<br>• Volume: [`biscuit_cake.nrrd`](../data/real/volumes/biscuit_cake.nrrd)<br>• Video: [`output_biscuit.mp4`](../experiments/outputs/output_biscuit.mp4) | <img src="../experiments/previews/biscuit_slice.png" alt="Biscuit Cake Slice" width="220"/> | **Multi-Layered Pastry:** Clean rectangular plane revealing horizontal layering of biscuit wafers interspersed with cream fillings. |
+| **Swiss Roll**<br>• Volume: [`swiss_roll.nrrd`](../data/real/volumes/swiss_roll.nrrd)<br>• Video: [`output_swiss_roll.mp4`](../experiments/outputs/output_swiss_roll.mp4) | <img src="../experiments/previews/swiss_roll_slice.png" alt="Swiss Roll Slice" width="220"/> | **Spiral Architecture:** Distinct rolled sponge cake spiral structure topped with cream rosettes and strawberries. |
 
 All extracted preview images are persisted under [`experiments/previews/`](../experiments/previews/) and all playable MP4 videos are available under [`experiments/outputs/`](../experiments/outputs/).
 

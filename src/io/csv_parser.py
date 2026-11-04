@@ -20,8 +20,13 @@ logger = setup_logger("csv_parser")
 class CSVPlaneParser:
     """Parses sequential plane specifications from CSV files according to SRS FR-2 and lecturer format."""
 
-    @staticmethod
-    def parse_line(raw_line: str, line_number: int = 1) -> PlaneGeometry | None:
+    @classmethod
+    def parse_line(
+        cls,
+        raw_line: str,
+        line_number: int = 1,
+        validate_geometry: bool = False
+    ) -> PlaneGeometry | None:
         """Parses a single CSV line into a PlaneGeometry instance.
 
         Supports both:
@@ -33,12 +38,16 @@ class CSVPlaneParser:
         Args:
             raw_line: String line from the CSV file.
             line_number: Line index for diagnostic reporting.
+            validate_geometry: If True, calls validate() on the parsed plane immediately,
+                raising GeometryValidationError or CoplanarityError if invalid.
 
         Returns:
             PlaneGeometry instance (Triangle or Trapezoid), or None if line is blank/comment/header.
 
         Raises:
             CSVFormatError: If column count is invalid or tokens cannot be parsed as floats.
+            GeometryValidationError: If validate_geometry is True and plane geometry is invalid.
+            CoplanarityError: If validate_geometry is True and trapezoid is not coplanar.
         """
         stripped = raw_line.strip()
         if not stripped or stripped.startswith("#"):
@@ -82,7 +91,7 @@ class CSVPlaneParser:
             a = Point3D(coords[0], coords[1], coords[2])
             b = Point3D(coords[3], coords[4], coords[5])
             c = Point3D(coords[6], coords[7], coords[8])
-            return IsoscelesTrianglePlane(a, b, c)
+            plane = IsoscelesTrianglePlane(a, b, c)
 
         elif pt_count == 4 or (pt_count is None and num_coords == 12):
             if len(coords) < 12:
@@ -107,7 +116,7 @@ class CSVPlaneParser:
                 # Alternative ordering: (a1, a2, b, c)
                 a1, a2, b, c = p1, p2, p3, p4
 
-            return IsoscelesTrapezoidPlane(a1, a2, b, c)
+            plane = IsoscelesTrapezoidPlane(a1, a2, b, c)
 
         else:
             raise CSVFormatError(
@@ -116,15 +125,26 @@ class CSVPlaneParser:
                 line_number=line_number
             )
 
+        if validate_geometry:
+            plane.validate()
+
+        return plane
+
     @classmethod
-    def parse_file(cls, filepath: str, tolerate_errors: bool = True) -> list[PlaneGeometry]:
+    def parse_file(
+        cls,
+        filepath: str,
+        tolerate_errors: bool = True,
+        validate_geometry: bool = False
+    ) -> list[PlaneGeometry]:
         """Parses an entire CSV file into a list of cutting planes.
 
         Args:
             filepath: Path to the plane definition CSV file.
             tolerate_errors: If True (default, per FR-24), malformed lines log a warning
                 and append an InvalidPlane instance to render a black frame without crashing.
-                If False, raises CSVFormatError.
+                If False, raises CSVFormatError or geometry validation errors.
+            validate_geometry: If True, validates plane geometry immediately during parsing.
 
         Returns:
             List of parsed PlaneGeometry objects.
@@ -136,7 +156,11 @@ class CSVPlaneParser:
         with open(filepath, "r", encoding="utf-8") as f:
             for idx, line in enumerate(f, start=1):
                 try:
-                    plane = cls.parse_line(line, line_number=idx)
+                    plane = cls.parse_line(
+                        line,
+                        line_number=idx,
+                        validate_geometry=validate_geometry
+                    )
                     if plane is not None:
                         planes.append(plane)
                 except Exception as err:
@@ -155,7 +179,12 @@ class CSVPlaneParser:
         return planes
 
     @classmethod
-    def iter_planes(cls, filepath: str, tolerate_errors: bool = True) -> Iterator[PlaneGeometry]:
+    def iter_planes(
+        cls,
+        filepath: str,
+        tolerate_errors: bool = True,
+        validate_geometry: bool = False
+    ) -> Iterator[PlaneGeometry]:
         """Streams plane definitions lazily from disk line-by-line."""
         if not os.path.exists(filepath):
             raise CSVFormatError(f"CSV file not found: '{filepath}'")
@@ -163,7 +192,11 @@ class CSVPlaneParser:
         with open(filepath, "r", encoding="utf-8") as f:
             for idx, line in enumerate(f, start=1):
                 try:
-                    plane = cls.parse_line(line, line_number=idx)
+                    plane = cls.parse_line(
+                        line,
+                        line_number=idx,
+                        validate_geometry=validate_geometry
+                    )
                     if plane is not None:
                         yield plane
                 except Exception as err:

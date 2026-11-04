@@ -3,7 +3,7 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Status: Completed](https://img.shields.io/badge/Status-Completed-success.svg)]()
-[![Tests: Passing](https://img.shields.io/badge/Tests-Passing%20(31%2F31)-brightgreen.svg)]()
+[![Tests: Passing](https://img.shields.io/badge/Tests-Passing%20(34%2F34)-brightgreen.svg)]()
 
 A high-performance Object-Oriented software system for slicing and projecting arbitrary 2D planes from 3D volumetric raster data (NRRD format) into synchronized MP4 video containers.
 
@@ -11,7 +11,7 @@ A high-performance Object-Oriented software system for slicing and projecting ar
 
 ---
 
-## 📌 Overview & Scope
+## Overview & Scope
 
 The system extracts arbitrary 2D cross-sectional digital images from a 3D volumetric raster volume (with dimensions `sx × sy × sz` containing unsigned integer voxels of 8, 16, or 32 bits) along arbitrary spatial planes specified by user coordinates.
 
@@ -35,7 +35,7 @@ Voxel queries outside the volume boundaries are systematically assigned zero val
 
 ---
 
-## 💡 Key Engineering Highlights
+## Key Engineering Highlights
 
 1. **High-Throughput SIMD Vectorization:**
    Replaces nested Python pixel loops with vectorized 2D array broadcasting (`np.ogrid` / `np.rint`), dropping frame latency from ~2,000 ms down to ~4 ms.
@@ -49,21 +49,26 @@ Voxel queries outside the volume boundaries are systematically assigned zero val
 
 ---
 
-## 🖼️ Visual Gallery & Output Videos
+## Visual Gallery & Output Videos
 
 Every real-world class dataset was sliced, centered, and rendered into an MP4 video container:
 
 | Dataset | Extracted 2D Slice | Video Link & Description |
 | :--- | :---: | :--- |
-| **Human Head MRI** | <img src="experiments/previews/head_slice.png" alt="Head Slice" width="180"/> | [🎬 **Watch `output_head.mp4`**](experiments/outputs/output_head.mp4)<br>280 sagittal slices through cerebral cortex, cerebellum, and brainstem (230 FPS). |
-| **Croissant (500³ Benchmark)** | <img src="experiments/previews/croissant_slice.png" alt="Croissant Slice" width="180"/> | [🎬 **Watch `output_croissant.mp4`**](experiments/outputs/output_croissant.mp4)<br>100 triangular frames revealing laminated dough and butter layering (73 FPS). |
-| **Onion** | <img src="experiments/previews/onion_slice.png" alt="Onion Slice" width="180"/> | [🎬 **Watch `output_onion.mp4`**](experiments/outputs/output_onion.mp4)<br>120 oblique cross-sections highlighting concentric tunic bulb scales (254 FPS). |
-| **Biscuit Cake** | <img src="experiments/previews/biscuit_slice.png" alt="Biscuit Cake Slice" width="180"/> | [🎬 **Watch `output_biscuit.mp4`**](experiments/outputs/output_biscuit.mp4)<br>120 slices showing alternating biscuit layers and cream fillings (252 FPS). |
-| **Swiss Roll** | <img src="experiments/previews/swiss_roll_slice.png" alt="Swiss Roll Slice" width="180"/> | [🎬 **Watch `output_swiss_roll.mp4`**](experiments/outputs/output_swiss_roll.mp4)<br>120 frames through spiral sponge rolls with whipped cream topping (236 FPS). |
+| **Human Head MRI** | <img src="experiments/previews/head_slice.png" alt="Head Slice" width="180"/> | [**Watch `output_head.mp4`**](experiments/outputs/output_head.mp4)<br>280 sagittal slices through cerebral cortex, cerebellum, and brainstem (230 FPS). |
+| **Croissant (500³ Benchmark)** | <img src="experiments/previews/croissant_slice.png" alt="Croissant Slice" width="180"/> | [**Watch `output_croissant.mp4`**](experiments/outputs/output_croissant.mp4)<br>100 triangular frames revealing laminated dough and butter layering (73 FPS). |
+| **Onion** | <img src="experiments/previews/onion_slice.png" alt="Onion Slice" width="180"/> | [**Watch `output_onion.mp4`**](experiments/outputs/output_onion.mp4)<br>120 oblique cross-sections highlighting concentric tunic bulb scales (254 FPS). |
+| **Biscuit Cake** | <img src="experiments/previews/biscuit_slice.png" alt="Biscuit Cake Slice" width="180"/> | [**Watch `output_biscuit.mp4`**](experiments/outputs/output_biscuit.mp4)<br>120 slices showing alternating biscuit layers and cream fillings (252 FPS). |
+| **Swiss Roll** | <img src="experiments/previews/swiss_roll_slice.png" alt="Swiss Roll Slice" width="180"/> | [**Watch `output_swiss_roll.mp4`**](experiments/outputs/output_swiss_roll.mp4)<br>120 frames through spiral sponge rolls with whipped cream topping (236 FPS). |
+
+### Dataset Provenance & External Repositories:
+All volumetric datasets and plane coordinates are bundled directly in this repository under [`data/real/`](data/real/) for turnkey reproducibility. The raw original files were retrieved from the official course Google Drive repositories:
+* **[Course Benchmark Datasets Drive (Part 1)](https://drive.google.com/drive/folders/1koJ83uaeMYdJt6AwvVlmMJk_wzczvmmG):** Human Head MRI (`MRHead_1.nrrd`), 500³ Croissant (`croissant.nrrd`), and Edge Cases Suite (`edge_cases.csv`).
+* **[Class Community Datasets Drive (Part 2)](https://drive.google.com/drive/folders/1lCbwgdLlXeefc9TKYExIDF-Qc_2lsk6G):** Onion (`onion.nrrd`), Biscuit Cake (`biscuit_cake.nrrd`), and Swiss Roll (`swiss_roll.nrrd`).
 
 ---
 
-## 📊 Empirical Performance & Results
+## Empirical Performance & Results
 
 Measured on an Intel Core workstation (Windows 11, 64-bit, Python 3.12, NumPy 2.5):
 
@@ -78,7 +83,7 @@ Measured on an Intel Core workstation (Windows 11, 64-bit, Python 3.12, NumPy 2.
 
 ---
 
-## 🚀 Quickstart & Usage
+## Quickstart & Usage
 
 ### 1. Installation & Environment Setup
 
@@ -121,13 +126,13 @@ python Ex0.py data/real/volumes/onion.nrrd data/real/csv/onion.csv output_onion.
 
 ---
 
-## 🧪 Testing & Verification
+## Testing & Verification
 
 Run the automated test suite across all modules:
 ```bash
 python -m unittest discover -s tests
 ```
-*Current test suite: **31 unit and integration tests (100% Passing)** in ~0.5 seconds.*
+*Current test suite: **34 unit and integration tests (100% Passing)** in ~0.5 seconds.*
 
 To execute the automated multi-dataset benchmark suite:
 ```bash
@@ -136,7 +141,7 @@ python experiments/run_all_benchmarks.py
 
 ---
 
-## 📂 Repository Layout
+## Repository Layout
 
 ```text
 .
@@ -159,7 +164,7 @@ python experiments/run_all_benchmarks.py
 │   ├── outputs/                   # Generated MP4 video projections (Turnkey delivery)
 │   ├── previews/                  # Representative 2D slice previews (PNG)
 │   └── run_all_benchmarks.py      # Automated benchmark suite runner
-├── tests/                         # Automated unit & integration test suite (31 tests)
+├── tests/                         # Automated unit & integration test suite (34 tests)
 ├── Ex0.py                         # Main CLI execution entry point
 ├── requirements.txt               # Project dependencies
 └── README.md                      # Project overview and quickstart guide
@@ -167,7 +172,7 @@ python experiments/run_all_benchmarks.py
 
 ---
 
-## 📚 Technical Documentation
+## Technical Documentation
 
 Comprehensive engineering documentation is available under [`docs/`](docs/):
 * **[Software Requirements Specification (SRS)](docs/SRS.md)** – Detailed functional, non-functional, and interface requirements.

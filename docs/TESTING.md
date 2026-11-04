@@ -22,14 +22,14 @@ The verification strategy of the 3D Volume Plane Projection system is grounded i
 
 ## 2. Automated Test Suite Architecture
 
-The automated test suite is located under [tests/](../tests/) and comprises **31 comprehensive unit and integration tests**:
+The automated test suite is located under [tests/](../tests/) and comprises **34 comprehensive unit and integration tests**:
 
 ```text
 tests/
 ├── __init__.py
 ├── test_geometry.py       # 11 tests: Point3D, Vector3D, Triangle & Trapezoid models
-├── test_volume_io.py      # 7 tests: NRRD volume ingestion, OOB sampling, CSV parsing
-├── test_slicer.py         # 6 tests: ProjectionEngine, SIMD slicing, intensity normalization
+├── test_volume_io.py      # 9 tests: NRRD ingestion, dimension limits, OOB sampling, CSV & coplanarity
+├── test_slicer.py         # 7 tests: ProjectionEngine, SIMD slicing, negative OOB, normalization
 ├── test_video.py          # 4 tests: VideoWriterService, even dimensions, O(1) streaming
 └── test_utils.py          # 3 tests: Settings immutability, logger, custom exception hierarchy
 ```
@@ -38,7 +38,7 @@ tests/
 ```bash
 python -m unittest discover -s tests
 ```
-*Current Status: **31 Tests Passed (100% OK)** in ~0.5 seconds.*
+*Current Status: **34 Tests Passed (100% OK)** in ~0.5 seconds.*
 
 ---
 
@@ -58,14 +58,17 @@ python -m unittest discover -s tests
 
 ### 3.2 Volume I/O & CSV Parsing Tests (`test_volume_io.py`)
 * **3D Volume Loading:** Verifies correct shape, header extraction, and unsigned integer bit-depth handling across uint8, int16, uint16, and uint32.
+* **FR-1 Dimension Boundaries:** Validates that volumes with any dimension >= 1024 or < 1 strictly raise `VolumeIOError`.
 * **Branchless OOB Sampling:** Queries coordinates with x < 0, x >= sx, y < 0, y >= sy, z < 0, z >= sz, confirming that all out-of-bounds voxels evaluate to 0 without branching penalties.
 * **CSV Parsing Flexibility:**
   * Tests pure coordinate rows (9 numbers for triangles, 12 numbers for trapezoids).
   * Tests the lecturer's format with leading count indicators (`3, x1...` and `4, x1...`) and trailing comma padding.
   * Tests comments (`#`) and empty line filtering.
+* **Negative CSV Testing (Coplanarity Violation):** Tests that passing a non-coplanar 12-coordinate line raises `CoplanarityError` when `validate_geometry=True` or `plane.validate()` is called, and gracefully produces an `InvalidPlane` when `tolerate_errors=True`.
 
 ### 3.3 Slicing Engine Tests (`test_slicer.py`)
 * **Analytical Sphere Verification:** Slices a synthetic sphere volume at the equator (z = 50) and verifies the extracted circular cross-section matches analytical radius formulas.
+* **Absolute Negative Coordinates OOB:** Verifies that planes placed strictly in negative coordinate space (e.g., x, y, z in [-100, -10]) return a pure zero-filled black frame without causing Python negative indexing array wrap-around.
 * **SIMD Nearest-Neighbor Rounding:** Verifies that continuous spatial coordinates are mapped to discrete voxel indices using round-to-nearest (`np.rint`).
 * **Global Normalization:** Tests that diverse voxel intensities are mapped linearly into standard uint8 display range [0, 255] using global volume bounds (v_min, v_max).
 * **Degenerate Plane Fallback:** Verifies that passing an invalid plane to `slice_plane()` logs a warning and returns an all-zero matrix rather than raising an unhandled exception.

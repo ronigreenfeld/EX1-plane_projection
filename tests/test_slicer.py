@@ -69,6 +69,29 @@ class TestProjectionEngine(unittest.TestCase):
         slice_img = self.engine.slice_plane(plane)
         self.assertEqual(np.count_nonzero(slice_img), 0)
 
+    def test_absolute_negative_oob(self):
+        """A plane placed strictly in negative coordinates (e.g., x in [-100, -10])
+        must return a zero-filled black matrix without Python negative index wrapping.
+        """
+        # Valid isosceles triangle with all coordinates strictly negative
+        # Apex a at (-50, -50, -50), legs to (-90, -10, -50) and (-10, -10, -50)
+        # dist(a, b) = sqrt(40^2 + 40^2) = sqrt(3200) ~ 56.57
+        # dist(a, c) = sqrt(40^2 + 40^2) = sqrt(3200) ~ 56.57
+        # dist(b, c) = 80.0
+        a = Point3D(-50.0, -50.0, -50.0)
+        b = Point3D(-90.0, -10.0, -50.0)
+        c = Point3D(-10.0, -10.0, -50.0)
+
+        plane = IsoscelesTrianglePlane(a, b, c)
+        self.assertTrue(plane.is_valid)
+
+        slice_img = self.engine.slice_plane(plane)
+        d_h, d_w = plane.get_dimensions()
+
+        self.assertIsInstance(slice_img, np.ndarray)
+        self.assertEqual(slice_img.shape, (d_h, d_w))
+        self.assertEqual(np.count_nonzero(slice_img), 0)
+
     def test_trapezoid_slice(self):
         """Verify that trapezoid slicing works with correct dimensions."""
         a1 = Point3D(30.0, 20.0, 50.0)
