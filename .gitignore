@@ -31,6 +31,12 @@ project.log
 *.mp4
 output/
 
+# Binary data & datasets (kept locally)
+*.nrrd
+data/real/*.nrrd
+data/synthetic/*.nrrd
+
 # IDE
 .vscode/
 .idea/
+
