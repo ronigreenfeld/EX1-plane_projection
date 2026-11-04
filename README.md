@@ -55,7 +55,7 @@ Every real-world class dataset was sliced, centered, and rendered into an MP4 vi
 
 | Dataset | Extracted 2D Slice | Video Link & Description |
 | :--- | :---: | :--- |
-| **Human Head MRI** | <img src="experiments/previews/head_slice.png" alt="Head Slice" width="180"/> | [**Watch `output_head.mp4`**](experiments/outputs/output_head.mp4)<br>280 sagittal slices through cerebral cortex, cerebellum, and brainstem (230 FPS). |
+| **Human Head MRI** | <img src="experiments/previews/head_animation.gif" alt="Head MRI Animation" width="180"/> | [**Watch Full `output_head.mp4`**](experiments/outputs/output_head.mp4)<br>280 sagittal slices through cerebral cortex, cerebellum, and brainstem (230 FPS). |
 | **Croissant (500³ Benchmark)** | <img src="experiments/previews/croissant_slice.png" alt="Croissant Slice" width="180"/> | [**Watch `output_croissant.mp4`**](experiments/outputs/output_croissant.mp4)<br>100 triangular frames revealing laminated dough and butter layering (73 FPS). |
 | **Onion** | <img src="experiments/previews/onion_slice.png" alt="Onion Slice" width="180"/> | [**Watch `output_onion.mp4`**](experiments/outputs/output_onion.mp4)<br>120 oblique cross-sections highlighting concentric tunic bulb scales (254 FPS). |
 | **Biscuit Cake** | <img src="experiments/previews/biscuit_slice.png" alt="Biscuit Cake Slice" width="180"/> | [**Watch `output_biscuit.mp4`**](experiments/outputs/output_biscuit.mp4)<br>120 slices showing alternating biscuit layers and cream fillings (252 FPS). |
@@ -162,7 +162,7 @@ python experiments/run_all_benchmarks.py
 │   └── synthetic/                 # Synthetic analytical volumes (sphere_100.nrrd)
 ├── experiments/
 │   ├── outputs/                   # Generated MP4 video projections (Turnkey delivery)
-│   ├── previews/                  # Representative 2D slice previews (PNG)
+│   ├── previews/                  # Representative 2D slice previews (PNG) & animated GIF
 │   └── run_all_benchmarks.py      # Automated benchmark suite runner
 ├── tests/                         # Automated unit & integration test suite (34 tests)
 ├── Ex0.py                         # Main CLI execution entry point
