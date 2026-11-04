@@ -19,6 +19,7 @@ class Settings(metaclass=_ImmutableMeta):
     DEFAULT_FOURCC: str = "mp4v"      # Standard cross-platform MP4 codec
     TARGET_MIN_FPS: float = 30.0      # Assignment minimum throughput threshold
     TARGET_EXPECTED_FPS: float = 100.0  # Expected performance throughput target
+    MAX_CANVAS_DIM: int = 4096        # Maximum video frame dimension (encoder profile limit)
 
     # Volume limits (1 <= dim < 2^10)
     MIN_VOLUME_DIM: int = 1

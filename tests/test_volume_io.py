@@ -44,7 +44,9 @@ class TestNRRDVolume(unittest.TestCase):
         self.assertEqual(samples[3], 0)   # y < 0 -> OOB 0
 
     def test_load_real_mrhead_volume(self):
-        mrhead_path = "data/real/MRHead_1.nrrd"
+        mrhead_path = "data/real/volumes/MRHead_1.nrrd"
+        if not os.path.exists(mrhead_path):
+            mrhead_path = "data/real/MRHead_1.nrrd"
         if os.path.exists(mrhead_path):
             volume = NRRDVolume.load(mrhead_path)
             self.assertEqual(volume.shape, (256, 256, 130))

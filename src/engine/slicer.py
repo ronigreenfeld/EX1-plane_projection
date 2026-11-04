@@ -52,7 +52,9 @@ class ProjectionEngine:
                 d_height, d_width = plane.get_dimensions()
             except Exception:
                 d_height, d_width = (256, 256)
-            return np.zeros((max(1, d_height), max(1, d_width)), dtype=vol.dtype)
+            safe_h = min(max(1, d_height), Settings.MAX_CANVAS_DIM)
+            safe_w = min(max(1, d_width), Settings.MAX_CANVAS_DIM)
+            return np.zeros((safe_h, safe_w), dtype=vol.dtype)
 
         # Ensure valid non-zero canvas dimensions
         if d_height <= 0 or d_width <= 0:

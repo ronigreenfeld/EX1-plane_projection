@@ -82,6 +82,13 @@ class IsoscelesTrianglePlane(PlaneGeometry):
                 details={"dist_ab": d_ab, "dist_ac": d_ac, "diff": leg_diff}
             )
 
+        # Dimension bounds check (video encoder limit)
+        h, w = self.get_dimensions()
+        if h > Settings.MAX_CANVAS_DIM or w > Settings.MAX_CANVAS_DIM:
+            raise GeometryValidationError(
+                f"Triangle dimensions ({h}, {w}) exceed maximum limit of {Settings.MAX_CANVAS_DIM}"
+            )
+
         return True
 
     def get_dimensions(self) -> tuple[int, int]:
@@ -148,6 +155,13 @@ class IsoscelesTrapezoidPlane(PlaneGeometry):
                 triple_product=triple_product
             )
 
+        # Dimension bounds check (video encoder limit)
+        h, w = self.get_dimensions()
+        if h > Settings.MAX_CANVAS_DIM or w > Settings.MAX_CANVAS_DIM:
+            raise GeometryValidationError(
+                f"Trapezoid dimensions ({h}, {w}) exceed maximum limit of {Settings.MAX_CANVAS_DIM}"
+            )
+
         return True
 
     def get_dimensions(self) -> tuple[int, int]:
@@ -162,3 +176,26 @@ class IsoscelesTrapezoidPlane(PlaneGeometry):
         p_start = self.a1 + (v_a1b * float(y))
         p_end = self.a2 + (v_a2c * float(y))
         return p_start, p_end
+
+
+@dataclass(frozen=True)
+class InvalidPlane(PlaneGeometry):
+    """Placeholder for malformed or degenerate cutting plane specifications.
+
+    Adheres strictly to FR-24: renders a black frame with a warning without
+    crashing or desynchronizing the streaming video pipeline.
+    """
+    reason: str = "Invalid plane geometry"
+    default_height: int = 256
+    default_width: int = 256
+
+    def validate(self) -> bool:
+        raise GeometryValidationError(self.reason)
+
+    def get_dimensions(self) -> tuple[int, int]:
+        return (self.default_height, self.default_width)
+
+    def get_scanline_endpoints(self, y: int) -> tuple[Point3D, Point3D]:
+        origin = Point3D(0.0, 0.0, 0.0)
+        return origin, origin
+

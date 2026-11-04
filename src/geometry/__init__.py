@@ -6,6 +6,7 @@ from src.geometry.plane import (
     PlaneGeometry,
     IsoscelesTrianglePlane,
     IsoscelesTrapezoidPlane,
+    InvalidPlane,
 )
 
 __all__ = [
@@ -14,4 +15,5 @@ __all__ = [
     "PlaneGeometry",
     "IsoscelesTrianglePlane",
     "IsoscelesTrapezoidPlane",
+    "InvalidPlane",
 ]

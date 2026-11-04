@@ -4,7 +4,6 @@ from __future__ import annotations
 import os
 import cv2
 import numpy as np
-from src.engine.slicer import ProjectionEngine
 from src.utils.config import Settings
 from src.utils.exceptions import VideoEncodingError
 from src.utils.logger import setup_logger
@@ -96,6 +95,7 @@ class VideoWriterService:
             raise VideoEncodingError("Cannot write frame: VideoWriter is closed or uninitialized.")
 
         # 1. Normalize intensity to uint8 [0, 255]
+        from src.engine.slicer import ProjectionEngine
         uint8_slice = ProjectionEngine.normalize_frame_to_uint8(slice_frame, v_min=v_min, v_max=v_max)
         sh, sw = uint8_slice.shape
 

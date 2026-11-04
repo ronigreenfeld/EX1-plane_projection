@@ -30,10 +30,11 @@ ENV/
 project.log
 *.mp4
 output/
+experiments/outputs/
 
 # Binary data & datasets (kept locally)
 *.nrrd
-data/real/*.nrrd
+data/real/volumes/*.nrrd
 data/synthetic/*.nrrd
 
 # IDE
